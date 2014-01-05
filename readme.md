@@ -1,3 +1,22 @@
+Installation
+============
+
+ensure node 0.10 is installed. Agile Warlock was not tested with previous versions, but could work.
+If it doesn't, do no blame me ;)
+use node --version if you're not sure about the installed version.
+
+If you don't have Bower:
+npm install -g bower
+
+then
+npm install restify
+bower install angular#1.2.6
+
+run the app:
+node app.js
+
+then access to http://localhost:8080/public/
+
 Architecture
 ============
 
