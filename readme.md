@@ -9,8 +9,8 @@ If you don't have Bower:
 npm install -g bower
 
 then
-npm install restify
-bower install angular#1.2.6
+npm install
+bower install
 
 run the app:
 node app.js
