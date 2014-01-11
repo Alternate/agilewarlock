@@ -33,11 +33,11 @@ Server:
 Node.JS
 |_ Restify              Rest framework
 |_ Socket.IO            Websocket support + fallbacks
-|_ NodeRedis            Redis driver
 |_ Passport             Authentification
+
 
 
 Database:
 ---------
-Redis
+MongoDb
 
