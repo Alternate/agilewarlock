@@ -2,7 +2,7 @@
  "name": "AgileBoard",
   "version": "0.0.1",
  "dependencies": {
-   "angular": "1.2.6",
+   "angular": "1.2.8",
    "flot": "~0.8.2"
   }
 }
