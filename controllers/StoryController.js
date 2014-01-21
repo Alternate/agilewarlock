@@ -22,12 +22,12 @@ module.exports = function (server)
    * This function is responsible for returning a given story
    */
   function getStory (req, res, next) {
-    console.log("getting story of id: " + req.params.id);
-    StoryModel.findById(req.params.id, function (err, data) {
+    console.log("getting story of id: " + req.params._id);
+    StoryModel.findById(req.params._id, function (err, data) {
       if (err) return handleError(err);
       if(!data)
       {
-        return next(new restify.ResourceNotFoundError("User story " + req.params.id + " not found"));
+        return next(new restify.ResourceNotFoundError("User story " + req.params._id + " not found"));
       }
       res.send(data);
       return next();
@@ -38,15 +38,15 @@ module.exports = function (server)
    * This function is responsible for deleting a given story
    */
   function deleteStory (req, res, next) {
-    console.log("deleting story of id: " + req.params.id);
-    StoryModel.findById(req.params.id, function (err, data)
+    console.log("deleting story of id: " + req.params._id);
+    StoryModel.findById(req.params._id, function (err, data)
     {
       if (err) return handleError(err);
       if(!data)
       {
-        return next(new restify.ResourceNotFoundError("User story " + req.params.id + " not found"));
+        return next(new restify.ResourceNotFoundError("User story " + req.params._id + " not found"));
       }
-      StoryModel.remove(req.params.id, function (err, data) {
+      StoryModel.remove(req.params._id, function (err, data) {
         if (err) return handleError(err);
         res.send({});
         return next();
@@ -58,15 +58,15 @@ module.exports = function (server)
    * This function is responsible for updating a given story
    */
   function updateStory (req, res, next) {
-    console.log("updating story of id: " + req.params.id);
-    StoryModel.findById(req.params.id, function (err, data)
+    console.log("updating story of id: " + req.params._id);
+    StoryModel.findById(req.params._id, function (err, data)
     {
       if (err) return handleError(err);
       if(!data)
       {
-        return next(new restify.ResourceNotFoundError("User story " + req.params.id + " not found"));
+        return next(new restify.ResourceNotFoundError("User story " + req.params._id + " not found"));
       }
-      StoryModel.update({_id : req.params.id}, {description: req.params.description},
+      StoryModel.update({_id : req.params._id}, {description: req.params.description},
           function (err, numberAffected, raw) {
             if (err) return handleError(err);
             res.send({}); // raw.ok === 1 && raw.updatedExisting
@@ -105,8 +105,8 @@ module.exports = function (server)
 
   // declare routes
   server.get ('/story',     getStories);
-  server.get ('/story/:id', getStory);
-  server.put ('/story/:id', updateStory);
-  server.del ('/story/:id', deleteStory);
+  server.get ('/story/:_id', getStory);
+  server.put ('/story/:_id', updateStory);
+  server.del ('/story/:_id', deleteStory);
   server.post('/story',     postStory);
 }

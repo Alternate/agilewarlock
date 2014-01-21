@@ -3,6 +3,8 @@
       Enter text and hit enter:
       <input type="text" ng-model="description" name="description" />
       <input type="submit" id="submit" value="Submit" />
-      <pre>{{list}}</pre>
+      <ul ng-repeat="story in list">
+        <li>{{story.description}}</li>
+      </ul>
 </form>
 
