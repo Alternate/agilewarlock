@@ -17,7 +17,6 @@ frisby.create('Ensure creating story results in a new story with and Id and a de
     })
   .afterJSON(function(data)
   {
-    //continue with retrieval test
     testGetStory(data);
   })
 .toss()
@@ -53,14 +52,8 @@ frisby.create('Ensure updating user story results in the story content being mod
       description: "an updated description"
     })
   .expectStatus(200)
-  // .expectJSON({
-  //     _id: story._id,
-  //     description: "an updated description"
-  //   })
-  .inspectBody()
   .afterJSON(function(data)
   {
-    console.log("-------------");
     testDeleteStory(story)
   })
   .toss();
