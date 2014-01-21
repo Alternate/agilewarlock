@@ -9,8 +9,10 @@ module.exports = function (server)
    */
   function getStories (req, res, next) {
     // .find() without any arguments, will return all results
-    StoryModel.find().execFind(function (err,data) {
+    console.log("getting all stories");
+    StoryModel.find(function (err,data) {
       if (err) return handleError(err);
+      console.log("getting all stories:" + data);
       res.send(data);
       return next();
     });

@@ -9,8 +9,8 @@ frisby.create('Ensure creating story results in a new story with and Id and a de
     })
   .expectStatus(200)
   .expectJSONTypes({
-      description: String,
-      _id: String
+      _id: String,
+      description: String
     })
   .expectJSON({
       description: "as an user I want to pass my test to ensure the API is working"
@@ -81,3 +81,19 @@ frisby.create('Ensure getting deleted user story results in 404 error')
   .expectStatus(404)
   .toss();
 }
+
+
+
+/**
+ * Test getting a list of user stories
+ */
+frisby.create('Ensure getting story list returns an array')
+  .get('http://localhost:8080/story')
+  .expectStatus(200)
+  .expectJSONTypes('*',
+    {
+      _id: String,
+      description: String
+    })
+  .inspectBody()
+.toss()
