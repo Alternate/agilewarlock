@@ -1,5 +1,6 @@
-mongoose = require('mongoose')
-  , StoryModel = mongoose.model('Story')
+var mongoose = require('mongoose'),
+    restify = require('restify'),
+    StoryModel = mongoose.model('Story')
 
 module.exports = function (server)
 {
@@ -9,6 +10,7 @@ module.exports = function (server)
   function getStories (req, res, next) {
     // .find() without any arguments, will return all results
     StoryModel.find().execFind(function (err,data) {
+      if (err) return handleError(err);
       res.send(data);
       return next();
     });
@@ -20,10 +22,33 @@ module.exports = function (server)
   function getStory (req, res, next) {
     console.log("getting story of id: " + req.params.id);
     StoryModel.findById(req.params.id, function (err, data) {
-      console.log("findById returned an error: " + err);
-      console.log("findById returned " + data);
+      if (err) return handleError(err);
+      if(!data)
+      {
+        return next(new restify.ResourceNotFoundError("User story " + req.params.id + " not found"));
+      }
       res.send(data);
       return next();
+    });
+  }
+
+  /**
+   * This function is responsible for deleting a given story
+   */
+  function deleteStory (req, res, next) {
+    console.log("deleting story of id: " + req.params.id);
+    StoryModel.findById(req.params.id, function (err, data)
+    {
+      if (err) return handleError(err);
+      if(!data)
+      {
+        return next(new restify.ResourceNotFoundError("User story " + req.params.id + " not found"));
+      }
+      StoryModel.remove(req.params.id, function (err, data) {
+        if (err) return handleError(err);
+        res.send({});
+        return next();
+      });
     });
   }
 
@@ -38,14 +63,26 @@ module.exports = function (server)
     story.description = req.params.description;
     console.log("Creating story: " + req.params.description);
     story.save(function (err, product, numberAffected) {
+      if (err) return handleError(err);
       res.contentType = 'json';
       res.send(product);
       return next();
     });
   }
 
+  function handleError(err)
+  {
+    var errObj = err;
+    if (err.err) {
+      errObj = err.err; // unnest error when required
+    }
+    console.log("An error occured: " + errObj);
+    return next(new restify.InternalError(errObj));
+  }
+
   // declare routes
   server.get ('/story',     getStories);
   server.get ('/story/:id', getStory);
+  server.del ('/story/:id', deleteStory);
   server.post('/story',     postStory);
 }
