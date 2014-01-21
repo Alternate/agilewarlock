@@ -1,50 +1,4 @@
 var frisby = require('frisby');
-/**
- * Test story retrieval
- */
-function testDeleteStory(story){
-frisby.create('Ensure deleting user story results in the right story being deleted')
-  .delete('http://localhost:8080/story/' + story._id)
-  .expectStatus(200)
-  .expectJSON({})
-  .afterJSON(function(data)
-  {
-    testGetDeletedStory(story)
-  })
-  .toss();
-}
-
-function testGetDeletedStory(story){
-frisby.create('Ensure getting deleted user story results in 404 error')
-  .get('http://localhost:8080/story/' + story._id)
-  .expectStatus(404)
-  .inspectBody()
-  .toss();
-}
-
-
-/**
- * Test story retrieval
- */
-function testGetStory(story){
-frisby.create('Ensure getting user story results in the right story being returned')
-  .get('http://localhost:8080/story/' + story._id)
-  .expectStatus(200)
-  .expectJSONTypes({
-      description: String,
-      _id: String
-    })
-  .expectJSON({
-      _id: story._id,
-      description: story.description
-    })
-  .inspectBody()
- .afterJSON(function(data)
- {
-    testDeleteStory(data);
- })
-.toss();
-}
 
 /**
  * Test story creation
@@ -68,5 +22,69 @@ frisby.create('Ensure creating story results in a new story with and Id and a de
   })
 .toss()
 
+/**
+ * Test story retrieval
+ */
+function testGetStory(story){
+frisby.create('Ensure getting user story results in the right story being returned')
+  .get('http://localhost:8080/story/' + story._id)
+  .expectStatus(200)
+  .expectJSONTypes({
+      _id: String,
+      description: String
+  })
+  .expectJSON({
+      _id: story._id,
+      description: story.description
+    })
+  .afterJSON(function(data)
+  {
+    testUpdateStory(data);
+  })
+  .toss();
+}
+
+/**
+ * Test story update
+ */
+function testUpdateStory(story){
+frisby.create('Ensure updating user story results in the story content being modified')
+  .put('http://localhost:8080/story/'  + story._id, {
+      description: "an updated description"
+    })
+  .expectStatus(200)
+  // .expectJSON({
+  //     _id: story._id,
+  //     description: "an updated description"
+  //   })
+  .inspectBody()
+  .afterJSON(function(data)
+  {
+    console.log("-------------");
+    testDeleteStory(story)
+  })
+  .toss();
+}
+
+/**
+ * Test story deletion
+ */
+function testDeleteStory(story){
+frisby.create('Ensure deleting user story results in the right story being deleted')
+  .delete('http://localhost:8080/story/' + story._id)
+  .expectStatus(200)
+  .expectJSON({})
+  .afterJSON(function(data)
+  {
+    testGetDeletedStory(story)
+  })
+  .toss();
+}
 
 
+function testGetDeletedStory(story){
+frisby.create('Ensure getting deleted user story results in 404 error')
+  .get('http://localhost:8080/story/' + story._id)
+  .expectStatus(404)
+  .toss();
+}
