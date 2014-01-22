@@ -9,10 +9,9 @@ module.exports = function (server)
    */
   function getStories (req, res, next) {
     // .find() without any arguments, will return all results
-    console.log("getting all stories");
-    StoryModel.find(function (err,data) {
+    StoryModel.find(null, null, null, function (err, data) {
       if (err) return handleError(err);
-      console.log("getting all stories:" + data);
+      console.log("getting all stories returns: " + data);
       res.send(data);
       return next();
     });
@@ -46,7 +45,7 @@ module.exports = function (server)
       {
         return next(new restify.ResourceNotFoundError("User story " + req.params._id + " not found"));
       }
-      StoryModel.remove(req.params._id, function (err, data) {
+      StoryModel.remove({ _id: req.params._id}, function (err, data) {
         if (err) return handleError(err);
         res.send({});
         return next();
