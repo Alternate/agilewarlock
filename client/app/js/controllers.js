@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
+angular.module('agileWarlock.controllers', []).
   controller('StoryCtrl', ['$scope', 'Restangular', function($scope, Restangular) {
     var storyAPI = Restangular.all('story');
     storyAPI.getList().then(function(stories)

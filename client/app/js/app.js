@@ -2,13 +2,13 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', [
+angular.module('agileWarlock', [
   'ngRoute',
   'restangular',
-  'myApp.filters',
-  'myApp.services',
-  'myApp.directives',
-  'myApp.controllers'
+  'agileWarlock.filters',
+  'agileWarlock.services',
+  'agileWarlock.directives',
+  'agileWarlock.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/stories', {templateUrl: 'partials/stories.html', controller: 'StoryCtrl'});
