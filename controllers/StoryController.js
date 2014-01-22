@@ -37,6 +37,7 @@ module.exports = function (server)
    * This function is responsible for deleting a given story
    */
   function deleteStory (req, res, next) {
+    // param checking not required; the routing will fail if the id is missing
     console.log("deleting story of id: " + req.params._id);
     StoryModel.findById(req.params._id, function (err, data)
     {
@@ -57,6 +58,10 @@ module.exports = function (server)
    * This function is responsible for updating a given story
    */
   function updateStory (req, res, next) {
+    var error = _detectMissingParameter(req, ["_id", "description"]);
+    if (error) {
+      return next(error);
+    }
     console.log("updating story of id: " + req.params._id);
     StoryModel.findById(req.params._id, function (err, data)
     {
@@ -79,8 +84,10 @@ module.exports = function (server)
    * Creates a new story and stores it in the database
    */
   function postStory (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    var error = _detectMissingParameter(req, ["description"]);
+    if (error) {
+      return next(error);
+    }
     var story = new StoryModel();
     story.description = req.params.description;
     console.log("Creating story: " + req.params.description);
@@ -92,6 +99,29 @@ module.exports = function (server)
     });
   }
 
+  /**
+   * Checks the presence of the mandatory parameters in a request
+   * @param req the request
+   * @param paramNames array of string - the mandatory parameters names
+   * @return false when no parameter is missing
+   *         oherwise a MissingParameterError when at least one parameter is missing
+   */
+  function _detectMissingParameter(req, paramNames)
+  {
+    for (var i = paramNames.length - 1; i >= 0; i--)
+    {
+      if (!req.params.hasOwnProperty(paramNames[i]))
+      {
+        return new restify.MissingParameterError('Missing parameter ' + paramNames[i]);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Handle error message
+   *  @param err an error object
+   */
   function handleError (err)
   {
     var errObj = err;

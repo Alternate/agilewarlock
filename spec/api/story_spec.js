@@ -86,6 +86,22 @@ function testUpdateStory(story){
     .expectStatus(200)
     .afterJSON(function(data)
     {
+      testInvalidUpdateStory(story)
+    })
+    .toss();
+}
+
+/**
+ * Test story update with invalid request
+ */
+function testInvalidUpdateStory(story){
+  frisby.create('Ensure updating user story results in the story content being modified')
+    .put('http://localhost:8080/story/'  + story._id, {
+        //missing description parameter
+      })
+    .expectStatus(409)
+    .afterJSON(function(data)
+    {
       testDeleteStory(story)
     })
     .toss();
@@ -116,3 +132,12 @@ function testGetDeletedStory(story){
 }
 
 
+/**
+ * Test invalid story creation request (missing parameter)
+ */
+frisby.create('Ensure creating story fails when a parameter is missing')
+  .post('http://localhost:8080/story', {
+      // missing description parameter
+    })
+  .expectStatus(409)
+  .toss()
